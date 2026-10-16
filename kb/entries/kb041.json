@@ -1,0 +1,14 @@
+{
+  "id": "kb041",
+  "title": "Crypto 常见套路（比赛速查）",
+  "description": "古典/编码/常见数学陷阱",
+  "detail": "1. 编码链：base16/32/58/62/64/85、hex、url、uu；中文->utf8/gbk hex\n2. 古典：凯撒/维吉尼亚（quipqiup）、栅栏、培根、猪圈、键盘坐标、音符/电码\n3. RSA 套路：e=1/小 e（立方攻击）、共模、小 n（yafu 分解）、n 相同公约数、维纳/邦格罗德（e 大）、p 高位（coppersmith）、泄露 dp/dq\n4. 古典工具：RsaCtfTool 起手，-n -e --decrypt\n5. 哈希：长度扩展（hashpumpy）；md5 碰撞（fastcoll）\n6. 异或：已知明文开头（flag{）逐位还原循环 key\n7. 椭圆：smart's attack（ anomalous curve ）\n8. lfsr/格：lattice 用 sage；比赛 CVM 上没 sage 就 python 的 olll 实现\n渗透赛里 crypto 多为\"解开拿凭据/flag\"的小题，重识别轻推导。",
+  "commands": [
+    "RsaCtfTool -n ... -e 65537 --decrypt --uncipher file"
+  ],
+  "tags": [
+    "crypto"
+  ],
+  "source": "CTF wiki 思路",
+  "created_at": "2026-10-15T14:14:39Z"
+}

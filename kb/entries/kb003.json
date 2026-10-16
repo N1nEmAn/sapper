@@ -1,0 +1,15 @@
+{
+  "id": "kb003",
+  "title": "文件上传绕过",
+  "description": "黑名单/白名单/解析/竞争四类打法",
+  "detail": "黑名单：.php5 .phtml .phps；asp→asa/cdx/cer；大小写、点尾部、::$DATA（win）、空格。\n白名单：00 截断（老环境）、双扩展配合解析漏洞、图片马 + 包含漏洞。\n解析漏洞：nginx 空格 php 文件名（老版本）、apache 多后缀解析 x.php.abc、IIS 6 分号。\n竞争条件：不断上传不断访问，配合删文件后包含的临时文件。\n利用链：上传 → 记录 URL 到 loot → 连接（蚁剑/手工 payload）→ 先找 flag 再提权。",
+  "commands": [
+    "curl -F 'file=@shell.phtml;type=image/jpeg' http://T/upload.php"
+  ],
+  "tags": [
+    "web",
+    "upload"
+  ],
+  "source": "经验",
+  "created_at": "2026-10-15T13:44:05Z"
+}

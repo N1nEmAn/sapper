@@ -1,0 +1,15 @@
+{
+  "id": "kb034",
+  "title": "字典与 wordlist 位置",
+  "description": "常用字典路径与生成",
+  "detail": "kali 自带：/usr/share/wordlists/（rockyou.txt.gz 解压、dirb/common.txt、dirbuster/、wfuzz/）\n目录扫描：common.txt 起步 → directory-list-2.3-medium；中文项目加 admin/login/api/guangdong 后缀思维\n参数 fuzz：burp 参数名字典、arjun 自带\n用户名：目标域相关信息生成（姓名拼音规则：zhangsan/zs/zhang.san）+ 常见 admin/test/root/guest\n密码变形：公司缩写+年份（corp2026）、admin@123、P@ssw0rd\n生成：cewl 从页面抓关键词做密码表；hashcat --stdout 规则变异\n字典放仓库 dicts/ 自带的几个轻量版（比赛环境离线时兜底）。",
+  "commands": [
+    "gzip -d /usr/share/wordlists/rockyou.txt.gz"
+  ],
+  "tags": [
+    "recon",
+    "bruteforce"
+  ],
+  "source": "经验",
+  "created_at": "2026-10-15T14:14:38Z"
+}

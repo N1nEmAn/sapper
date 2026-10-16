@@ -1,0 +1,16 @@
+{
+  "id": "kb012",
+  "title": "Linux 提权套路",
+  "description": "sudo/suid/cron/内核 顺序排查",
+  "detail": "顺序：\n1. sudo -l（GTFOBins 查可滥用二进制；env_keep 劫持 LD_PRELOAD）\n2. SUID：find / -perm -4000 2>/dev/null（GTFOBins）\n3. 定时任务：/etc/cron* + crontab -l；可写脚本被 root 跑\n4. capabilities：getcap -r / 2>/dev/null（cap_setuid 等）\n5. 可写 path/sudo 配置/ssh key\n6. 内核 CVE 按版本：DirtyCow(4.8-)、DirtyPipe(5.8-5.16.11/5.15.25-)、PwnKit polkit、OverlayFS\n7. 容器内先查逃逸条目\n信息收集脚本：linpeas.sh（离线版随仓库带）。",
+  "commands": [
+    "sudo -l && find / -perm -4000 -type f 2>/dev/null",
+    "getcap -r / 2>/dev/null"
+  ],
+  "tags": [
+    "privesc",
+    "linux"
+  ],
+  "source": "GTFOBins/linpeas",
+  "created_at": "2026-10-15T13:44:05Z"
+}

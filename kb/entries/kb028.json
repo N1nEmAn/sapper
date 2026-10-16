@@ -1,0 +1,13 @@
+{
+  "id": "kb028",
+  "title": "执行环境与工具链清单（往届实战）",
+  "description": "Kali 容器、每任务独立 tmp、base64 传码、结果标注本地/远端",
+  "detail": "TPT-Agent（第二届 19 名）实战配置：\n1. 核心只两个工具：执行 Python 代码 + 执行命令（越少工具越激发模型潜力）\n2. 每任务独立 tmp 目录防污染；命令经 docker exec、代码经 base64 传入沙箱避免转义试错\n3. 每次执行结果都标注\"这是本地沙箱结果\"，防误判为远端\n4. 命令执行加超时和输出截断\n5. 知识库：hacktricks/PayloadsAllTheThings/HowToHunt 精准关键词检索取前 N；CVE 库支持产品名+版本检索\n6. 教训：libc/架构不兼容会让预置工具集体阵亡——上场前在目标 CVM 上实测工具兼容性\n来源: https://github.com/CloudEver-Team/tencent_pentration_tool + enoch.host 复盘",
+  "commands": [],
+  "tags": [
+    "meta",
+    "environment"
+  ],
+  "source": "TPT-Agent/enoch",
+  "created_at": "2026-10-15T13:54:07Z"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "kb042",
+  "title": "Pwn 二进制方向速查",
+  "description": "栈溢出到 libc 三步与常见保护绕过",
+  "detail": "1. checksec 看保护：NX/PIE/RELRO/Canary\n2. 栈溢出：找偏移（cyclic）→ ret2win → ret2libc（泄露 put/got → 计算 base → system(/bin/sh)）\n3. 格式化字符串：%p 泄露 → %n 写（改 got/返回地址/fini_array）\n4. 堆：fastbin attack/tcache poisoning/UAF/unsorted bin leak（glibc 版本对号）\n5. Canary：泄露（格式化/输出残留）；PIE：partial overwrite\n6. one_gadget / ROPgadget / pwntools 模板（本地同版本 libc 调试）\n7. 无输出环境：ret2dlresolve / SROP / ORW 链\n8. 环境坑：靶机 libc 与本地不一致 → patchelf + ld 指定（往届队伍翻车点）\n渗透赛占比小，出现多为简单 ret2win/后门函数。",
+  "commands": [
+    "checksec --file=pwn1 && ROPgadget --binary pwn1 | grep syscall"
+  ],
+  "tags": [
+    "pwn"
+  ],
+  "source": "CTF wiki 思路",
+  "created_at": "2026-10-15T14:14:39Z"
+}

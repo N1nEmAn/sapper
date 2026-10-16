@@ -1,0 +1,13 @@
+{
+  "id": "kb021",
+  "title": "往届冠军架构经验（TCH/Cairn，唯一 AK）",
+  "description": "黑板+DAG 两层调度、极简协议、并行同质 Worker、最强模型全速",
+  "detail": "第二届唯一 AK 战队（54 题全解）核心做法：\n1. 只有两层：调度层（黑板 + DAG 引擎，即事实图）+ 执行层（Claude Code / Codex 直接当原子 Worker）\n2. 反对按渗透阶段拆角色 Agent（收集/利用/后渗透分工）——探索型任务的路径在交互中涌现，拆角色=把人类局限强加给模型；多 Agent 的正确用法是并行算力：同质 Worker 探索不同分支\n3. 极简环境：装满工具的 Kali 容器 + 只有一个 flag 提交 skill；无 MCP、无 RAG、无预定义流程（通识类 skill 会锁死上限）\n4. 用最贵模型全速跑（Opus+GPT，5 天 7692 元/10.9 亿 token）；早期低并发失误导致 AK 但只排第 4——动态计分制下速度=分数\n5. 保留结构化日志，卡壳时人工复盘日志注入意图是最后转折点\n来源: https://l3yx.github.io （TCH 复盘 + Harness 工程演进）",
+  "commands": [],
+  "tags": [
+    "meta",
+    "architecture"
+  ],
+  "source": "l3yx.github.io TCH 复盘",
+  "created_at": "2026-10-15T13:54:07Z"
+}

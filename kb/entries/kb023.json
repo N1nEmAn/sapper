@@ -1,0 +1,13 @@
+{
+  "id": "kb023",
+  "title": "停损与防沉迷机制",
+  "description": "三层检测打转 + 强制换向 + 调用签名去噪",
+  "detail": "CHYing ABANDON 机制：\n1. 检测打转：失败关键词 / 工具调用签名（去 IP 只留路径，避免误杀）/ 同一 CVE 尝试 3 次即拦截\n2. 命中后强制换方向（Hook 拦截）\n3. 阈值难定：太低误杀合理探索，太高浪费时间\n配套（Harness 工程共识）：工具调用防沉迷（别沉迷同一个工具）、步数阈值+多级队列重调度、卡住降级并注入提示、Observer 周期性读进度判断偏离。\nsapper 对应：timebox 写进 intent doc；verify 失败自动写 hint；指挥官 reason 连续 2 次 noop 即停；sweep/command 换题本身就是停损。\n来源: CHYing-agent + l3yx Harness 文",
+  "commands": [],
+  "tags": [
+    "meta",
+    "control"
+  ],
+  "source": "CHYing-agent/l3yx",
+  "created_at": "2026-10-15T13:54:07Z"
+}

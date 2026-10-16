@@ -1,0 +1,23 @@
+# Dependencies: none (Python 3 stdlib). The pyc cache must never ship.
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Rendered graph snapshots / local artifacts (generated, not source)
+*.html
+!lib/view_template.html
+fact-graph.html
+
+# Per-project fact-graph data — belongs in the *using* project, not here.
+# (this only matters if someone runs `fgc` inside this repo)
+.fg/
+.fg-claude/
+
+# Stray session logs / scratch
+agents/
+*.log
+.DS_Store
+.idea/
+.vscode/

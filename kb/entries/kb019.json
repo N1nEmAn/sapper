@@ -1,0 +1,16 @@
+{
+  "id": "kb019",
+  "title": "CTF flag 常见藏点",
+  "description": "拿 shell 后按清单翻",
+  "detail": "1. /flag /flag.txt /root/flag* /home/*/flag*（find / -name '*flag*' 2>/dev/null）\n2. 环境变量：env / printenv（容器题高频）\n3. 数据库里（见数据库条目）\n4. 仅 root 可读文件（需提权 → 提权条目）\n5. 计划任务脚本内容、cron 日志\n6. 第二台内网机器（多点题：横向条目）\n7. config/缓存文件、隐藏目录 .xxx\n8. 题目名/描述里的暗示（读题！）\n拿到立即 sapper flag 记录，再考虑提交。",
+  "commands": [
+    "find / -name '*flag*' -not -path '/proc/*' 2>/dev/null",
+    "env | grep -i flag"
+  ],
+  "tags": [
+    "flag",
+    "method"
+  ],
+  "source": "经验",
+  "created_at": "2026-10-15T13:44:05Z"
+}

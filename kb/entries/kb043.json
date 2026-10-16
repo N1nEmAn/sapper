@@ -1,0 +1,15 @@
+{
+  "id": "kb043",
+  "title": "爆破与验证码处理",
+  "description": "hydra/burp 验证码场景打法",
+  "detail": "无验证码：burp intruder（pitchfork 用户+密码）/ hydra http-post-form\n验证码场景：\n1. 回显：响应里带码/前端 base64 → 脚本读码重放\n2. 不失效：验证码一次获取多次使用 → 固定码爆破\n3. 可识别：ddddocr（python 库，本地秒破常见 4 位）\n4. 万能码：源码泄露看到 === 判断空值绕过\n5. 前端校验：直接接口层爆破\n限速绕过：XFF 变换、大小写用户名（ wordpress 陷阱）、分布式参数\n爆破纪律：小字典先试（top1000）→ 命中即停记 cred fact → 换下一目标（比赛时间比密码值钱）\nssh/rdp：hydra -L users -P pass T ssh；cewl 生成定向表优先。",
+  "commands": [
+    "hydra -L u.txt -P p.txt T http-post-form '/login:user=^USER^&pass=^PASS^:failed'"
+  ],
+  "tags": [
+    "bruteforce",
+    "web"
+  ],
+  "source": "经验",
+  "created_at": "2026-10-15T14:14:39Z"
+}

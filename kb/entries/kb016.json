@@ -1,0 +1,15 @@
+{
+  "id": "kb016",
+  "title": "常见 CVE 速查（web 入口向）",
+  "description": "按指纹命中即试的公开漏洞清单",
+  "detail": "Log4Shell: log4j 2.x → JNDI（header/参数都试，出网检测优先）\nShiro <1.2.4/1.4.2: rememberMe 默认 key（kPH+bIxk5D2deZiIxcaaaA==）→ 反序列化\nFastJSON <1.2.68: @type JNDI；1.2.47 绕 autotype\nWebLogic: T3/IIOP 反序列化（CVE-2020-2883 等）、/console 未授权（CVE-2020-14882）\nSpring: Spring4Shell（JDK9+）、actuator 泄露 → env/headdump\nThinkPHP 5.0.x/5.1.x: ?s=index/think\\app/invokefunction RCE\nStruts2: S2-045/046/061 OGNL（Content-Type）\nJenkins/GitLab/Confluence：未授权 RCE 一串（版本对应查）\n命中指纹→查图内 vuln fact 是否已试→试公开 PoC→记录 vuln fact。",
+  "commands": [
+    "nuclei -u http://T -tags cve -severity critical,high"
+  ],
+  "tags": [
+    "cve",
+    "web"
+  ],
+  "source": "经验/nuclei-templates",
+  "created_at": "2026-10-15T13:44:05Z"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "kb010",
+  "title": "弱口令与默认凭据清单",
+  "description": "后台/数据库/中间件管理台默认口令速查",
+  "detail": "后台：admin/admin admin/123456 admin/admin888 root/root test/test（+验证码识别）。\n数据库：root/root root/empty root/mysql sa/sa（MSSQL）。\n中间件管理台：tomcat tomcat/tomcat（/manager）、weblogic weblogic/weblogic123、\njboss admin/admin、rabbitmq guest/guest、elasticsearch 未授权、\nnacos nacos/nacos、druid-console、grafana admin/admin、\nzookeeper 未授权 2181、redis 未授权 6379、mongo 未授权 27017。\n命中率最高：admin/admin 与 admin/123456，先手试 5 个再上爆破。",
+  "commands": [],
+  "tags": [
+    "cred",
+    "recon"
+  ],
+  "source": "经验",
+  "created_at": "2026-10-15T13:44:05Z"
+}

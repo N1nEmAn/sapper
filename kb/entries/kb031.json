@@ -1,0 +1,13 @@
+{
+  "id": "kb031",
+  "title": "CVE 速查卷二（按产品）",
+  "description": "中间件/组件类第二梯队清单",
+  "detail": "PHPUnit CVE-2017-9841: /vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php POST 注入\nDrupal CVE-2018-7600: /user/register ajax render 注入\nJenkins: /cli?remoting=false 未授权命令、CVE-2024-23897 任意文件读（CLI 分块解析）\nConfluence: OGNL 系列（CVE-2022-26134 等），路径 /pages/createpage-entervariables.action\nGitLab: ExifTool RCE（CVE-2021-22205，无需认证，上传图即可）\nSpring Cloud Gateway: CVE-2022-22947 actuator 路由 spel\nApache Solr: velocity 模板 RCE、log4j 同中\nElasticsearch: 未授权 9200 全库；老版本沙箱绕过\nF5 BIG-IP: CVE-2022-1388 iControl REST 未授权\nExchange: ProxyShell/ProxyLogon（CVE-2021 系列）\nnacos: 默认口令/未认证 User-Agent 绕过（serverIdentity）\nApache APISIX/ShenYu 网关 dashboard 未授权\nphpMyAdmin: /setup 或弱口令 → into outfile\nweblogic IIOP/T3 补丁绕过一堆（CVE-2023-21839）\n打法统一：指纹→查版本对应条目→找现成 POC（exp 库/GitHub 搜 product+cve）→验证→记 vuln fact。",
+  "commands": [],
+  "tags": [
+    "cve",
+    "web"
+  ],
+  "source": "经验/nuclei-templates",
+  "created_at": "2026-10-15T14:14:38Z"
+}

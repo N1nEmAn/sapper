@@ -1,0 +1,14 @@
+{
+  "id": "kb040",
+  "title": "Misc 隐写与杂项速查",
+  "description": "文件头/字符串/隐写三板斧",
+  "detail": "1. file + xxd 头部：改后缀不改真身；png/jpg/zip/rar 头修复\n2. strings | grep -iE 'flag|key|ctf'\n3. binwalk -e：多层套娃压缩包/嵌入文件\n4. 图片：zsteg（png/bmp lsb）、stegsolve（帧/通道）、exiftool（注释/GPS）\n5. 压缩包：伪加密（hex 改标志）、爆破（zip2john + hashcat -m 13600）、明文攻击（bkcrack）\n6. 音频：wav lsb（ SilentEye/audacity 频谱图 ）\n7. 流量包：wireshark http/ftp 过滤导对象；usb 键盘流量脚本还原\n8. 取证：内存（volatility3）process cmdline/filescan 搜 flag；磁盘镜像挂载搜\n9. 编码链：base 家族/rot/与或/join-dutch 看特征（CyberChef magic）\n比赛渗透题里 misc 元素常藏在靶机文件里，别忽略下载目录。",
+  "commands": [
+    "binwalk -e file.png && strings -n 6 file.png | grep -i flag"
+  ],
+  "tags": [
+    "misc"
+  ],
+  "source": "CTF wiki 思路",
+  "created_at": "2026-10-15T14:14:39Z"
+}

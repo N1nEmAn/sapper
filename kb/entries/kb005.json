@@ -1,0 +1,16 @@
+{
+  "id": "kb005",
+  "title": "PHP 反序列化与 POP 链",
+  "description": "入口识别→链构造→phar 变体",
+  "detail": "入口：unserialize( 、magic 方法 __destruct/__wakeup、session 反序列化、phpggc 链。\n工具：phpggc -l 找对应框架链（Laravel/Monolog/ThinkPHP…）。\n绕 __wakeup：属性个数改大（CVE-2016-7124，PHP<7.0.10）。\nphar:// 变体：文件名参数处 phar://x.jpg/a.txt 触发（php>=8 受限注意）。\nJava：看 weblogic/shiro/fastjson 条目。\n线索：源码里 class 含 __destruct 且属性可控 → 本地起同版本 php 调试链。",
+  "commands": [
+    "phpggc Laravel/RCE1 'system(\"cat /flag\")' | base64 -w0"
+  ],
+  "tags": [
+    "web",
+    "deser",
+    "php"
+  ],
+  "source": "经验/phpggc",
+  "created_at": "2026-10-15T13:44:05Z"
+}

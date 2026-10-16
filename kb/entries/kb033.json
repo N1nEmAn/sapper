@@ -1,0 +1,15 @@
+{
+  "id": "kb033",
+  "title": "隧道与代理配置速查",
+  "description": "frp/chisel/ssh 三件套常用配置",
+  "detail": "chisel（最快）：服务端 chisel server -p 8000 --reverse；客户端 ./chisel client MY:8000 R:socks\nfrp：tcp 转发或 stcp；[common] token 记得设；socks5 插件 [plugin socks5]\nssh 三连：-D 动态 socks / -L 本地转发 / -R 反弹转发（跳板仅出网时）\nproxychains4：socks5 127.0.0.1 1080；quiet_mode；工具统一 proxychains4 前缀\nhttp 代理：gost -L=:8080；regeorg/neoreg 走 webshell 出隧道\n内网 dns 隧道：dnscat2（仅 dns 出网时）\n坑：udp 不走 socks5（nmap -sU 直接受限）；curl --socks5 显式指定；时钟不同步导致 tls 失败。",
+  "commands": [
+    "proxychains4 fscan -h 10.0.2.0/24"
+  ],
+  "tags": [
+    "pivot",
+    "network"
+  ],
+  "source": "经验",
+  "created_at": "2026-10-15T14:14:38Z"
+}

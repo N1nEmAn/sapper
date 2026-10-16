@@ -1,0 +1,17 @@
+{
+  "id": "kb009",
+  "title": "JWT 攻击",
+  "description": "none/弱密钥/kid 三板斧",
+  "detail": "1. alg=none：去签名段（老库中招）\n2. 弱密钥：jwt_tool / hashcat -m 16500 字典爆破（secret/key/123456/uuid）\n3. kid 注入：kid 指向文件或 SQL 注入路径\n4. 算法混淆 RS256→HS256 用公钥当 HMAC 密钥\n改 payload：role admin / user id 1。jwt.io 手改，注意 base64url。",
+  "commands": [
+    "hashcat -m 16500 jwt.txt /usr/share/wordlists/rockyou.txt",
+    "python3 jwt_tool.py <jwt> -C -d rockyou.txt"
+  ],
+  "tags": [
+    "web",
+    "jwt",
+    "auth"
+  ],
+  "source": "经验",
+  "created_at": "2026-10-15T13:44:05Z"
+}

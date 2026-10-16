@@ -1,0 +1,14 @@
+{
+  "id": "kb022",
+  "title": "上下文管理与防膨胀（三编译器）",
+  "description": "审题编译/进度编译/重试续作——不让打题 Agent 自己记笔记",
+  "detail": "CHYing-agent（第一届 Top9）经验：\n1. PromptCompiler：做题前用轻量模型把侦察数据+题目编译成结构化摘要（攻击面分层、优先方向、关键约束）——先审题再动手\n2. ProgressCompiler：上下文将满时由独立轻量 Agent 读所有进度文件，生成精炼接班简报。教训：让做题 Agent 自己记笔记必然膨胀失控（上下文爆→记笔记→笔记膨胀→读笔记又爆）\n3. RetryHandoffCompiler：重做老题时把历史攻击链编译成续作报告，从卡点继续而非重新探索\nsapper 对应做法：facts 就是黑板（只记增量事实），doc 层放证据细节默认不注入 prompt，recall 按需取——天然抗膨胀。\n来源: https://github.com/yhy0/CHYing-agent",
+  "commands": [],
+  "tags": [
+    "meta",
+    "memory",
+    "architecture"
+  ],
+  "source": "CHYing-agent 复盘",
+  "created_at": "2026-10-15T13:54:07Z"
+}

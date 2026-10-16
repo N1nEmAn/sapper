@@ -1,0 +1,15 @@
+{
+  "id": "kb013",
+  "title": "Windows 提权套路",
+  "description": "服务/令牌/UAC/内核",
+  "detail": "1. whoami /all：SeImpersonate → Potato 家族（GodPotato/JuicyPotato/RoguePotato 按版本）\n2. 无引号服务路径 + 可写目录 → 劫持\n3. AlwaysInstallElevated → msi payload\n4. 计划任务/启动项/注册表 AutoRun\n5. 内核漏洞按 build：ms16-032、cve-2021-1732、PrintNightmare\n6. 凭据收割：注册表 autolog、savedcreds（cmdkey /list）、DPAPI、lsass\n7. winpeas.exe / PowerUp.ps1 自动化",
+  "commands": [
+    "whoami /all & cmdkey /list"
+  ],
+  "tags": [
+    "privesc",
+    "windows"
+  ],
+  "source": "经验/winpeas",
+  "created_at": "2026-10-15T13:44:05Z"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "kb039",
+  "title": "Cookie/Session 攻击",
+  "description": "伪造/固定/解密/注入四路",
+  "detail": "1. 看结构：base64 解开看字段（user/role/isAdmin 常见）\n2. 序列化串：rO0AB（java）/ Tzoy（php \"O:2:\"）→ 反序列化条目\n3. 可解密 session（泄露 key/弱 key）：flask unpick 反序列化 RCE（.level 字段注入）\n4. 伪造：字段改 role=admin 重签（key 从 git 泄露/配置拿）\n5. 固定：登出后 session 不失效/登录前设置 session id\n6. jwt 见专条\n7. oauth/oidc：redirect_uri、state 缺失 CSRF、code 重放\n8. auto-binding 参数污染：注册多传 role 字段（mass assignment）",
+  "commands": [
+    "echo 'rO0ABXNyAB...' | base64 -d | xxd | head"
+  ],
+  "tags": [
+    "web",
+    "auth"
+  ],
+  "source": "经验",
+  "created_at": "2026-10-15T14:14:39Z"
+}

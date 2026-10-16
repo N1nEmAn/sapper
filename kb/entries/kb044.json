@@ -1,0 +1,17 @@
+{
+  "id": "kb044",
+  "title": "应急与反制面发现（靶机侦察向）",
+  "description": "拿下机器后先看有没有监控/蜜罐",
+  "detail": "比赛环境判断（拿 shell 首 3 分钟）：\n1. ps aux / tasklist：有没有 eden/监控 agent/蜜罐进程\n2. history/last/w：有没有别的队留下的痕迹（他们的 webshell/定时任务=现成跳板）\n3. 计划任务：/etc/cron* + crontab -l；atq（既有后门也可能是出题点）\n4. 网络连接：netstat -antp 谁连着我（可能是别队/出题人的 heartbeat）\n5. find 最近修改：find / -mmin -60（别的队的活动痕迹）\n6. 别动监控进程（打死可能判违规/丢环境）；发现蜜罐特征（假 flag/假凭据）记 hint 提醒指挥官别浪费预算\n7. KOH 场景：我方据点要防别队反扑——改弱口令、删别队 webshell 是合法防守动作",
+  "commands": [
+    "ps aux | head -30",
+    "last | head",
+    "find / -mmin -60 -type f 2>/dev/null | head"
+  ],
+  "tags": [
+    "recon",
+    "post"
+  ],
+  "source": "往届经验",
+  "created_at": "2026-10-15T14:14:39Z"
+}

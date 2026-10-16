@@ -1,0 +1,16 @@
+{
+  "id": "kb036",
+  "title": "协议与服务弱配置攻击",
+  "description": "非 HTTP 服务的常见突破口",
+  "detail": "FTP 21：匿名登录；配置文件路径泄露；vsftpd 2.3.4 后门\nSSH 22：弱口令；用户枚举（开口令回显差异）；老 openssh 用户名枚举 CVE-2018-15473\nSMB 445：匿名 IPC$ 枚举（enum4linux/crackmapexec --shares）；永恒蓝（内网老机器）；签名未启用→relay\nSMTP 25：用户枚举（VRFY/EXPN）；open relay\nPOP3/IMAP：凭据复用\nRedis 6379：未授权（写 crontab/sshkey/webshell/主从 RCE）\nMySQL 3306：弱口令→UDF/写文件；客户端读取链\nMSSQL 1433：sa 弱口令→xp_cmdshell\nRDP 3389：弱口令；BlueKeep（老系统）\nMongoDB/Elasticsearch/Memcached：未授权（11211 memcache 可打 ddos 面不碰）\nZookeeper 2181/Jenkins/K8s：见对应条目\n打法：nmap -sV 全端口先行，按服务逐条对号。",
+  "commands": [
+    "nmap -sV -sC -p- T --min-rate 3000",
+    "crackmapexec smb T --shares -u '' -p ''"
+  ],
+  "tags": [
+    "network",
+    "recon"
+  ],
+  "source": "经验/hacktricks",
+  "created_at": "2026-10-15T14:14:39Z"
+}

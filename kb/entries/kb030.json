@@ -1,0 +1,16 @@
+{
+  "id": "kb030",
+  "title": "云安全攻击清单",
+  "description": "AK/SK、元数据、Bucket、容器仓库",
+  "detail": "1. 凭据来源：代码硬编码（.env/config.py）、构建产物、git 历史、元数据接口\n2. AK/SK 利用：aliyun（ossutil/aliyun cli 列资源）、aws（aws sts get-caller-identity 起手）、tencent（cos/云api）\n3. 元数据：169.254.169.254 各家路径（见 SSRF 条目），阿里云新 IMDS 需要 token（先取再查）\n4. Bucket：公有遍历、任意上传（put）、serverless 函数改写；URL 特征 *.oss-*.aliyuncs.com / *.cos.ap-*.myqcloud.com / *.s3.amazonaws.com\n5. 镜像仓库：harbor 未授权（/api/v2.0/），docker registry 5000 api 列镜像 → 层里挖凭据\n6. k8s：10250 kubelet 未授权 exec、dashboard、etcd 2379\n云题常见终点：读 RDS/对象存储里的 flag，或用凭据开机器拿元数据 flag。",
+  "commands": [
+    "curl http://T:2375/version",
+    "curl http://T:10250/runningpods/"
+  ],
+  "tags": [
+    "cloud",
+    "cve"
+  ],
+  "source": "经验/hacktricks-cloud",
+  "created_at": "2026-10-15T14:14:38Z"
+}

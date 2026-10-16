@@ -1,0 +1,16 @@
+{
+  "id": "kb014",
+  "title": "容器/K8s 逃逸",
+  "description": "privileged/socket/cap/k8s token",
+  "detail": "判断在容器：/.dockerenv 存在、cgroup 含 docker/kubepods。\n1. privileged：fdisk -l 找宿主盘；mount 到 /mnt → chroot 写 crontab/ssh key\n2. 挂了 /var/run/docker.sock：起特权容器挂载宿主\n3. capabilities：CAP_SYS_ADMIN 可挂 cgroup release_agent；CAP_DAC_READ_SEARCH 读任意文件\n4. k8s：ServiceAccount token 在 /var/run/secrets/.../token → api server 创建特权 pod\n5. 内核漏洞同样适用（宿主共享内核）\n逃逸后第一件事：在宿主找 flag + 收集云凭据（元数据/配置文件）。",
+  "commands": [
+    "cat /proc/1/cgroup | head -3; ls /.dockerenv"
+  ],
+  "tags": [
+    "container",
+    "privesc",
+    "cloud"
+  ],
+  "source": "经验",
+  "created_at": "2026-10-15T13:44:05Z"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "kb027",
+  "title": "AI 渗透 Agent 通用架构模式（六大派）",
+  "description": "层级多Agent/协作式/意图超个体/受监控黑盒/CS-MCP/人机制衡",
+  "detail": "往届 17 支获奖队伍的六大架构模式（yzddmr6 元分析）：\n1. 层级式多 Agent：主规划 + 专家子 Agent（LangGraph/CrewAI）——编排复杂\n2. 协作式多 Agent：并行探索 + 共享知识库\n3. 意图驱动超级个体：单强模型沙箱内自主，只给高层意图（Claude Agent SDK，如 tinyctfer）\n4. 受监控黑盒：外部异步监控多实例\n5. 客户端-服务器 MCP：大脑与工具解耦\n6. 人机回圈双 Agent：执行者 + 顾问一票否决\n共性结论：沙箱化是红线；prompt 工程决定上限（配置优于硬编码）；记忆管理是核心挑战；极简工具集（3-5 个核心工具）优于大而全；不完全信任原则（多重验证+高风险审查）。\n冠军趋势 = 意图驱动 + 并行 worker + 不完全信任的验证。\n来源: https://yzddmr6.com/posts/manus-pentest-report",
+  "commands": [],
+  "tags": [
+    "meta",
+    "architecture"
+  ],
+  "source": "yzddmr6.com",
+  "created_at": "2026-10-15T13:54:07Z"
+}
