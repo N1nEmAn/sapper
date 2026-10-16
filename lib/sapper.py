@@ -1725,6 +1725,15 @@ def _load_arena_module():
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    # arena.py must stay stdlib-only, so its ArenaError cannot subclass
+    # FGError at definition time — yet every bench/auto caller guards with
+    # `except FGError`, and an uncaught ArenaError kills the whole loop
+    # (seen live: HTTP 409 "max active challenge instances" crashed bench).
+    # Rebind it as a direct FGError subclass after exec: raising sites
+    # resolve the name through module globals, so this takes effect
+    # immediately, and inheriting the original class keeps its custom
+    # __init__ (code/status/detail) and zero-arg super() closure intact.
+    module.ArenaError = type("ArenaError", (FGError, module.ArenaError), {})
     return module
 
 

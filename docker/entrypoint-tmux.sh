@@ -29,7 +29,7 @@ JSON
 
 log "platform = $BENCHMARK_BASE_URL"
 log "gateway  = $ANTHROPIC_BASE_URL"
-log "model    = ${SAPPER_MODEL:-glm-5.3-flash[1m]} (interactive TUI x ${SAPPER_PARALLEL:-6})"
+log "model    = ${SAPPER_MODEL:-glm-5.3-flash[1m]} (interactive TUI x ${SAPPER_PARALLEL:-3})"
 
 case "$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 \
         -H "BENCHMARK_TOKEN: $BENCHMARK_TOKEN" \

@@ -62,13 +62,13 @@ ROOT="${SAPPER_ROOT:-/work/runs}"
 TOTAL="${SAPPER_TOTAL_MINUTES:-470}"
 PER="${SAPPER_MINUTES_PER_CHALLENGE:-9}"
 mkdir -p "$ROOT"
-log "starting: sapper bench --root $ROOT --minutes $TOTAL (per-challenge ${PER}m, parallel ${SAPPER_PARALLEL:-6})"
+log "starting: sapper bench --root $ROOT --minutes $TOTAL (per-challenge ${PER}m, parallel ${SAPPER_PARALLEL:-3})"
 
 exec sapper bench \
   --root "$ROOT" \
   --minutes "$TOTAL" \
   --minutes-per-challenge "$PER" \
   --max-steps "${SAPPER_MAX_STEPS:-10}" \
-  --parallel "${SAPPER_PARALLEL:-6}" \
+  --parallel "${SAPPER_PARALLEL:-3}" \
   --model "${SAPPER_MODEL:-glm-5.3-flash[1m]}" \
   --skip-permissions

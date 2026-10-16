@@ -549,6 +549,51 @@ class ArenaClientTests(unittest.TestCase):
             client.start_challenge("../etc/passwd")
 
 
+class ArenaErrorBridgeTests(unittest.TestCase):
+    """Regression for the live 409 crash: the platform answered
+    "max active challenge instances reached (3)" and the raw ArenaError
+    escaped the `except FGError` guard in _bench_parallel, killing the
+    whole bench. Modules loaded through sapper._load_arena_module() must
+    raise ArenaError catchable as FGError."""
+
+    def test_loaded_arena_error_subclasses_fgerror(self):
+        arena = sapper._load_arena_module()
+        self.assertTrue(issubclass(arena.ArenaError, sapper.FGError))
+
+    def test_409_max_active_caught_as_fgerror(self):
+        import threading
+        from http.server import BaseHTTPRequestHandler, HTTPServer
+        arena = sapper._load_arena_module()
+
+        class Handler(BaseHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+
+            def do_POST(self):
+                data = json.dumps({
+                    "code": "invalid_state",
+                    "message": "max active challenge instances reached (3), "
+                               "please close an existing challenge before starting a new one",
+                    "detail": {},
+                }).encode()
+                self.send_response(409)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(data)))
+                self.end_headers()
+                self.wfile.write(data)
+
+        server = HTTPServer(("127.0.0.1", 0), Handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            client = arena.ArenaClient(
+                f"http://127.0.0.1:{server.server_address[1]}", "t")
+            with self.assertRaises(sapper.FGError) as ctx:
+                client.start_challenge("c1")
+            self.assertIn("max active", str(ctx.exception).lower())
+        finally:
+            server.shutdown()
+
+
 class CommanderTests(unittest.TestCase):
     def test_parse_command_payload(self):
         ok = {"accepted": True, "data": {"action": "work", "target": "c03", "minutes": 25, "note": "close"}}
