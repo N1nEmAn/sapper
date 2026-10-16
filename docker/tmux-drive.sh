@@ -152,7 +152,10 @@ accept_dialogs() {  # accept_dialogs <window> <pane> -> 0 if a dialog was dismis
 
 launch() {  # launch <code>
   local code="$1"
-  local started; started=$(arena start "$code" 2>>"$LOG" || true)
+  local err; err=$(mktemp)
+  local started; started=$(arena start "$code" 2>"$err" || true)
+  LAST_LAUNCH_ERR="$(cat "$err" 2>/dev/null || true)"
+  cat "$err" >>"$LOG" 2>/dev/null || true; rm -f "$err"
   local addrs; addrs=$(printf '%s' "$started" | python3 -c '
 import json,sys
 try: print(" ".join(json.load(sys.stdin).get("container_addr") or []))
@@ -246,6 +249,14 @@ while (( $(NOW) < END_AT )); do
       continue
     fi
     launch "$code" && active_count=$((active_count+1)) || {
+      if printf '%s' "${LAST_LAUNCH_ERR:-}" | grep -qi "max active"; then
+        # platform cap — not this challenge's fault: requeue it and stop
+        # burning through the list (a full sweep marks everything failed
+        # and exhausts idx, after which top-up never runs again).
+        idx=$((idx-1))
+        log "$code: platform active cap — requeued, waiting for a free slot"
+        break
+      fi
       restarts[$code]=$((${restarts[$code]:-0}+1))
       log "$code: launch failed (restart ${restarts[$code]}/$MAX_RESTARTS)"
     }
