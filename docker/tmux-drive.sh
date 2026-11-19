@@ -19,6 +19,13 @@ PER_MIN="${SAPPER_MINUTES_PER_CHALLENGE:-25}"
 STALL_SECONDS="${SAPPER_STALL_SECONDS:-300}"
 SESSION=sapper-tui
 MAX_RESTARTS=2
+# Q1: opt-in scheduled launches, no new deps. Format (entries separated by
+# ';' or newlines): "HH:MM code[,code...]" — e.g.
+#   SAPPER_SCHEDULE="14:30 tch3-01,tch3-02; 20:00 tch3-33"
+# Each sweep fires entries whose time has arrived today and weren't fired yet.
+# OPT-IN: with SAPPER_SCHEDULE unset/empty the scheduler is fully inert —
+# zero behavior change compared to not having this feature.
+SCHEDULE_FIRED="$ROOT/.schedule-fired.txt"
 mkdir -p "$ROOT"
 log() { printf '[drive] %s\n' "$*" | tee -a "$LOG"; }
 END_AT=$(( $(date +%s) + TOTAL_MIN * 60 ))
@@ -49,19 +56,72 @@ PYEOF2
 # inherit the new key, and `claude --continue` restores the prior session.
 rotate_key() {
   python3 - <<'PYROT'
-import json, os
+import json, os, sys, time
+def say(msg): print(f"[rotate] {msg}", file=sys.stderr)
 raw = os.environ.get("SAPPER_KEY_POOL", "").strip()
 try:
-    pool = [p for p in json.loads(raw) if isinstance(p, dict) and p.get("token")]
-except Exception:
-    pool = []
+    entries = json.loads(raw)
+except Exception as exc:
+    say(f"FATAL: SAPPER_KEY_POOL is not valid JSON ({exc}); rotation impossible")
+    raise SystemExit(1)
+if not isinstance(entries, list):
+    say(f"FATAL: SAPPER_KEY_POOL must be a JSON list, got {type(entries).__name__}")
+    raise SystemExit(1)
+# validate every entry explicitly — silent skips made dead pools invisible
+pool, rejected = [], []
+for i, p in enumerate(entries):
+    if not isinstance(p, dict):
+        rejected.append(f"#{i}: not an object ({type(p).__name__})"); continue
+    if not (p.get("token") or "").strip():
+        rejected.append(f"#{i}: empty/missing token (base_url={p.get('base_url')!r})"); continue
+    pool.append(p)
+if rejected:
+    say(f"pool: {len(entries)} entries, {len(pool)} valid, {len(rejected)} REJECTED:")
+    for r in rejected: say(f"  - {r}")
 if not pool:
+    say("FATAL: no valid pool entries remain — every entry was rejected above")
     raise SystemExit(1)
 cur = os.environ.get("ANTHROPIC_AUTH_TOKEN", "")
 start = next((i for i, e in enumerate(pool) if e["token"] == cur), -1)
-nxt = pool[(start + 1) % len(pool)]
-if start >= 0 and nxt["token"] == cur:
-    raise SystemExit(1)  # single key: nothing to rotate to
+# tried-memory (TTL window, default 30min so a recovered key becomes
+# reusable): plain round-robin used to cycle forever through dead keys.
+# The file is rewritten with only unexpired rows each rotation.
+root = os.environ.get("SAPPER_ROOT", "/work/runs")
+tried_path = root + "/.rotated-tried.txt"
+tried_ttl = float(os.environ.get("SAPPER_TRIED_TTL", "1800"))
+now = time.time()
+tried, fresh_rows = [], []
+try:
+    for ln in open(tried_path):
+        try:
+            ts, tk = ln.strip().split(" ", 1)
+            if now - float(ts) < tried_ttl:
+                tried.append(tk); fresh_rows.append(f"{ts} {tk}")
+        except ValueError:
+            pass  # corrupt line: drop it on rewrite
+except FileNotFoundError:
+    pass
+with open(tried_path, "w") as fh:
+    fh.write("".join(r + "\n" for r in fresh_rows))
+# round-robin order preserved, but keys already tried inside the window are
+# skipped — the first untried successor wins (current key never re-selected)
+ordered = pool[start + 1:] + pool[:max(start + 1, 0)]
+nxt = next((e for e in ordered if e["token"] != cur and e["token"] not in tried), None)
+if nxt is None:
+    # everything tried inside the TTL window — make it LOUD, not quiet:
+    # the driver's log (drive.log) is where operators look.
+    stamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    lines = [f"{stamp} ALL POOL KEYS EXHAUSTED (window {tried_ttl/60:.0f}min)",
+             f"  pool: {len(pool)} valid entries, all marked tried",
+             f"  tried keys this window: {len(set(tried))}",
+             "  action: rotation paused; keys become reusable as their TTL expires"]
+    try:
+        with open(root + "/POOL-ALERT.txt", "a") as fh:
+            fh.write("\n".join(lines) + "\n")
+    except OSError as exc:
+        say(f"could not write POOL-ALERT.txt ({exc})")
+    for l in lines: say(l)
+    raise SystemExit(1)
 for k, v in (
     ("ANTHROPIC_BASE_URL", nxt.get("base_url")),
     ("ANTHROPIC_AUTH_TOKEN", nxt["token"]),
@@ -69,7 +129,10 @@ for k, v in (
 ):
     if v:
         os.environ[k] = v
-with open(os.environ.get("SAPPER_ROOT", "/work/runs") + "/rotated.env", "w") as fh:
+if cur and any(e["token"] == cur for e in pool):
+    with open(tried_path, "a") as fh:
+        fh.write(f"{now} {cur}\n")
+with open(root + "/rotated.env", "w") as fh:
     fh.write(
         f'export ANTHROPIC_BASE_URL="{os.environ["ANTHROPIC_BASE_URL"]}"\n'
         f'export ANTHROPIC_AUTH_TOKEN="{os.environ["ANTHROPIC_AUTH_TOKEN"]}"\n'
@@ -87,7 +150,47 @@ PYROT
   return 1
 }
 
-QUOTA_RE='insufficient|balance|quota|exceeded|billing|payment|401|[Uu]nauthorized|invalid.{0,12}[Aa][Pp][Ii].[Kk]ey|欠费|余额'
+# Q4: quota/auth error patterns are user-extendable via env — set
+# SAPPER_QUOTA_PATTERNS='|myvendor|custom.?denied' (leading | included) to
+# append vendor-specific wording to the built-in set.
+QUOTA_RE='insufficient|balance|quota|exceeded|billing|payment|401|[Uu]nauthorized|invalid.{0,12}[Aa][Pp][Ii].[Kk]ey|欠费|余额'"${SAPPER_QUOTA_PATTERNS:+${SAPPER_QUOTA_PATTERNS}}"
+
+# ---- scheduled launches (Q1, opt-in) ----------------------------------------
+check_schedule() {
+  local sched="${SAPPER_SCHEDULE:-}"
+  [[ -n "$sched" ]] || return 0
+  local today now_hhmm entry tm codes code key
+  today=$(date +%F); now_hhmm=$(date +%H:%M)
+  while IFS= read -r entry; do
+    entry="${entry#"${entry%%[![:space:]]*}"}"   # ltrim
+    [[ -n "$entry" ]] || continue
+    tm="${entry%% *}"; codes="${entry#* }"
+    if [[ "$tm" == "$entry" ]]; then
+      log "schedule: entry '$entry' has no codes — skipped"; continue
+    fi
+    if [[ ! "$tm" =~ ^[0-9]{2}:[0-9]{2}$ ]]; then
+      log "schedule: bad time '$tm' — skipped"; continue
+    fi
+    key="$today $tm $codes"
+    grep -qxF "$key" "$SCHEDULE_FIRED" 2>/dev/null && continue
+    # lexicographic compare is correct for zero-padded HH:MM
+    [[ "$now_hhmm" < "$tm" ]] && continue
+    local -a codes_arr
+    read -r -a codes_arr <<< "${codes//,/ }"  # split on ','/space: bash AND zsh safe
+    for code in "${codes_arr[@]}"; do
+      if tmux list-windows -t "$SESSION" -F '#W' 2>/dev/null | grep -qxF "$code"; then
+        log "schedule: $code already running — not relaunched (launch would restart it)"
+        continue
+      fi
+      if launch "$code" >/dev/null 2>&1; then
+        log "schedule: launched $code (scheduled $tm)"
+      else
+        log "schedule: launch FAILED for $code (scheduled $tm) — not retried today"
+      fi
+    done
+    printf '%s\n' "$key" >> "$SCHEDULE_FIRED"
+  done <<< "$(printf '%s\n' "$sched" | tr ';' '\n')"
+}
 
 # submit every recorded-unsubmitted flag fact in a challenge's graph
 finish_flags() {  # finish_flags <code>
@@ -235,6 +338,7 @@ adopt_existing
 
 # ---- main loop ---------------------------------------------------------------
 while (( $(NOW) < END_AT )); do
+  check_schedule
   active_windows=$(tmux list-windows -t "$SESSION" -F '#W' 2>/dev/null | grep -v '^supervisor$' || true)
   active_count=$(printf '%s\n' "$active_windows" | grep -c . || true)
 
